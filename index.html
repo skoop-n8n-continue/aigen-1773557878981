@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fox Valley Mall Wayfinding</title>
+
+    <!-- Cache-busting meta tags -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=xyz123">
+</head>
+<body>
+    <div id="app" class="app-container">
+
+        <!-- Idle Screen -->
+        <div id="idle-screen" class="screen active">
+            <div class="idle-content">
+                <div class="idle-logo">
+                    <i class="fa-solid fa-leaf"></i> Fox Valley Mall
+                </div>
+                <h1>Welcome to Fox Valley</h1>
+                <p class="pulse-text">Touch anywhere to begin</p>
+                <div class="idle-graphics">
+                    <!-- Decorative abstract shapes to match mall vibe -->
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Screen -->
+        <div id="main-screen" class="screen">
+            <header class="header">
+                <div class="logo" id="home-btn">
+                    <i class="fa-solid fa-leaf"></i> Fox Valley Mall
+                </div>
+                <div class="header-info">
+                    <span id="current-time">12:00 PM</span>
+                    <span class="weather"><i class="fas fa-sun"></i> 72°F</span>
+                </div>
+            </header>
+
+            <div class="main-body">
+                <!-- Sidebar Directory -->
+                <aside class="sidebar">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search stores, dining...">
+                        <button id="clear-search" class="hidden"><i class="fas fa-times"></i></button>
+                    </div>
+
+                    <div class="categories" id="category-filters">
+                        <button class="category-btn active" data-category="all">All</button>
+                        <button class="category-btn" data-category="apparel">Apparel</button>
+                        <button class="category-btn" data-category="jewelry">Jewelry</button>
+                        <button class="category-btn" data-category="shoes">Shoes</button>
+                        <button class="category-btn" data-category="accessories">Accessories</button>
+                        <button class="category-btn" data-category="dining">Dining</button>
+                        <button class="category-btn" data-category="entertainment">Play</button>
+                        <button class="category-btn" data-category="amenities">Amenities</button>
+                    </div>
+
+                    <div class="store-list-container">
+                        <ul class="store-list" id="store-list">
+                            <!-- Store items injected here via JS -->
+                        </ul>
+                    </div>
+
+                    <div class="store-details hidden" id="store-details">
+                        <button id="back-to-list" class="btn-text"><i class="fas fa-chevron-left"></i> Back to Directory</button>
+                        <div class="details-content">
+                            <h2 id="detail-name">Store Name</h2>
+                            <span class="detail-category" id="detail-category">Category</span>
+                            <p id="detail-desc">Store description goes here.</p>
+                            <div class="detail-actions">
+                                <button id="take-me-there" class="btn-primary"><i class="fas fa-directions"></i> Take Me There</button>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Map Area -->
+                <main class="map-container">
+                    <div class="map-toolbar">
+                        <button id="zoom-in-btn" class="map-btn" title="Zoom In"><i class="fas fa-plus"></i></button>
+                        <button id="zoom-out-btn" class="map-btn" title="Zoom Out"><i class="fas fa-minus"></i></button>
+                        <button id="reset-map-btn" class="map-btn" title="Reset Map"><i class="fas fa-compress-arrows-alt"></i></button>
+                    </div>
+
+                    <div class="map-wrapper" id="map-wrapper">
+                        <!-- Interactive SVG Map -->
+                        <svg viewBox="0 0 800 550" width="100%" height="100%" id="mall-map" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <pattern id="floor-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <rect width="40" height="40" fill="#f8f9fa"/>
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#eeeeee" stroke-width="1"/>
+                                </pattern>
+                                <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                                    <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.1"/>
+                                </filter>
+                                <filter id="tree-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="2" dy="5" stdDeviation="3" flood-opacity="0.2"/>
+                                </filter>
+                            </defs>
+
+                            <!-- Floor Background -->
+                            <rect x="20" y="20" width="760" height="510" rx="30" fill="url(#floor-pattern)" stroke="#e0e0e0" stroke-width="4" filter="url(#shadow)"/>
+
+                            <!-- Central Grass Area -->
+                            <ellipse cx="400" cy="270" rx="140" ry="60" fill="#8bc34a" />
+                            <ellipse cx="400" cy="270" rx="130" ry="50" fill="#7cb342" />
+
+                            <!-- Fountain -->
+                            <circle cx="400" cy="330" r="25" fill="#3e2723" /> <!-- wooden seating -->
+                            <circle cx="400" cy="330" r="18" fill="#4fc3f7" /> <!-- water -->
+                            <circle cx="400" cy="330" r="15" fill="#29b6f6" />
+                            <circle cx="400" cy="330" r="5" fill="#e1f5fe" /> <!-- spout -->
+
+                            <!-- Red Animal Sculpture (Stylized Panther) -->
+                            <path d="M 300 280 L 320 270 L 340 275 L 345 290 L 330 300 L 310 295 Z" fill="#d32f2f" filter="url(#shadow)"/>
+
+                            <!-- Large Wooden Trees -->
+                            <g class="trees" filter="url(#tree-shadow)">
+                                <!-- Left Tree -->
+                                <circle cx="260" cy="270" r="15" fill="#8d6e63" /> <!-- base -->
+                                <path d="M 260 270 Q 240 230 200 220" fill="none" stroke="#a1887f" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M 260 270 Q 280 230 310 210" fill="none" stroke="#a1887f" stroke-width="6" stroke-linecap="round"/>
+                                <path d="M 260 270 Q 240 300 210 320" fill="none" stroke="#a1887f" stroke-width="5" stroke-linecap="round"/>
+                                <!-- Right Tree -->
+                                <circle cx="540" cy="270" r="15" fill="#8d6e63" /> <!-- base -->
+                                <path d="M 540 270 Q 560 230 600 220" fill="none" stroke="#a1887f" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M 540 270 Q 520 230 490 210" fill="none" stroke="#a1887f" stroke-width="6" stroke-linecap="round"/>
+                                <path d="M 540 270 Q 560 300 590 320" fill="none" stroke="#a1887f" stroke-width="5" stroke-linecap="round"/>
+                            </g>
+
+                            <!-- Stores Group -->
+                            <g class="stores" id="map-stores">
+                                <!-- Top Row -->
+                                <g class="store-shape" id="shape-woodart" data-id="woodart" transform="translate(100, 80)">
+                                    <rect width="120" height="120" rx="8" class="store-rect" />
+                                    <text x="60" y="65" text-anchor="middle" class="store-label">Wood Art</text>
+                                </g>
+
+                                <g class="store-shape" id="shape-restrooms" data-id="restrooms" transform="translate(240, 80)">
+                                    <rect width="100" height="120" rx="8" class="store-rect" />
+                                    <text x="50" y="60" text-anchor="middle" class="store-label"><tspan x="50" dy="-5">&#xf228;</tspan><tspan x="50" dy="20">Restrooms</tspan></text>
+                                </g>
+
+                                <g class="store-shape" id="shape-foodcourt" data-id="foodcourt" transform="translate(360, 80)">
+                                    <rect width="180" height="120" rx="8" class="store-rect" />
+                                    <text x="90" y="65" text-anchor="middle" class="store-label">Food Court</text>
+                                </g>
+
+                                <g class="store-shape" id="shape-imagination" data-id="imagination" transform="translate(560, 80)">
+                                    <rect width="140" height="120" rx="8" class="store-rect" />
+                                    <text x="70" y="60" text-anchor="middle" class="store-label"><tspan x="70" dy="0">Imagination</tspan><tspan x="70" dy="16">Playground</tspan></text>
+                                </g>
+
+                                <!-- Bottom Row -->
+                                <g class="store-shape" id="shape-helzberg" data-id="helzberg" transform="translate(100, 370)">
+                                    <rect width="140" height="100" rx="8" class="store-rect" />
+                                    <text x="70" y="55" text-anchor="middle" class="store-label">Helzberg</text>
+                                </g>
+
+                                <g class="store-shape" id="shape-francescas" data-id="francescas" transform="translate(260, 370)">
+                                    <rect width="100" height="100" rx="8" class="store-rect" />
+                                    <text x="50" y="55" text-anchor="middle" class="store-label">francesca's</text>
+                                </g>
+
+                                <g class="store-shape" id="shape-sunglasshut" data-id="sunglasshut" transform="translate(380, 370)">
+                                    <rect width="100" height="100" rx="8" class="store-rect" />
+                                    <text x="50" y="50" text-anchor="middle" class="store-label"><tspan x="50" dy="0">Sunglass</tspan><tspan x="50" dy="16">Hut</tspan></text>
+                                </g>
+
+                                <g class="store-shape" id="shape-vans" data-id="vans" transform="translate(500, 370)">
+                                    <rect width="80" height="100" rx="8" class="store-rect" />
+                                    <text x="40" y="55" text-anchor="middle" class="store-label">Vans</text>
+                                </g>
+
+                                <g class="store-shape" id="shape-brighton" data-id="brighton" transform="translate(600, 370)">
+                                    <rect width="100" height="100" rx="8" class="store-rect" />
+                                    <text x="50" y="55" text-anchor="middle" class="store-label">Brighton</text>
+                                </g>
+                            </g>
+
+                            <!-- Route Path -->
+                            <path id="route-path" d="" fill="none" stroke="#00b7af" stroke-width="6" stroke-dasharray="12 12" stroke-linecap="round" stroke-linejoin="round" class="hidden" />
+                            <circle id="route-end" cx="0" cy="0" r="8" fill="#00b7af" class="hidden" />
+
+                            <!-- You Are Here Pin -->
+                            <g id="you-are-here" transform="translate(400, 355)">
+                                <circle cx="0" cy="0" r="20" fill="none" stroke="#d32f2f" stroke-width="2">
+                                    <animate attributeName="r" values="8; 25" dur="1.5s" repeatCount="indefinite" />
+                                    <animate attributeName="opacity" values="1; 0" dur="1.5s" repeatCount="indefinite" />
+                                </circle>
+                                <circle cx="0" cy="0" r="8" fill="#d32f2f" />
+                                <path d="M -15 -35 L 15 -35 L 15 -15 L 5 -15 L 0 -5 L -5 -15 L -15 -15 Z" fill="#d32f2f" />
+                                <text x="0" y="-22" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">YOU</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="wayfinding-card hidden" id="wayfinding-card">
+                        <div class="route-info">
+                            <h3><i class="fas fa-walking"></i> Route to <span id="route-dest-name">Store</span></h3>
+                            <p id="route-time">Est. 2 min walk</p>
+                        </div>
+                        <button id="end-route-btn" class="btn-secondary">End Route</button>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=xyz123"></script>
+</body>
+</html>
